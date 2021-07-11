@@ -1,0 +1,14 @@
+Firstly, generate an array that has every possible character that uses a random number generator for each value to iterate
+over as many characters as the user requires. Next, check for specifics and fulfill those.
+
+the final function should require 4 arguments, each one being a 1 or 0 (true or false), 
+each of these 4 being potential requirements: lowercase, uppercase, numeric, and/or special characters.
+should any of these return true, a value from an array full of valid characters from each selected category
+will choose a random value and a random place within the established password.
+(5 arrays in total: one for each requirement and one for all of them combined to fill space).
+
+As each requirement is being fulfilled, each special character has to also be able to lock its place. 
+For example, a special character and a numeral could be required. The special character is chosen and placed in character 6 of 
+the password. Now the numeral should not be allowed to occupy character 6 as to not undo the work. To do this, as you generate 
+subsequent required characters, have the random number generator behind the placement of the subsequent value see if the returned value
+equals an already used placement and if it did, would run the generator again.  
