@@ -29,9 +29,19 @@ var specialCharReq = "n";
 
 var lengthReq = 0;
 
+//chracater "spots" are spots on the password array that required characters will occupy so other required characters don't override each other
+
+var lowerCharSpot = 0;
+
+var upperCharSpot = 0;
+
+var numCharSpot = 0;
+
+var specialCharSpot = 0;
+
 //this array is the password
 
-var password = [0];
+var passwordArray = [0];
 
 function checkLowerCharReq() {
     lowerCharReq = prompt("does your password require a lowercase character? y/n");
@@ -99,8 +109,6 @@ function checkSpecialCharReq() {
 function checkLengthReq() {
     lengthReq = prompt("enter the length of your password");
 
-    password.length = lengthReq; 
-
     if (isNaN(lengthReq)) {
         alert("please enter a number");
         checkLengthReq();
@@ -108,6 +116,18 @@ function checkLengthReq() {
     else if (!lengthReq) {
         return;
     }
+
+    else if (lengthReq > 128) {
+        alert("Please keep the password between 8 and 128 characters");
+        checkLengthReq();
+    }
+
+    else if (lengthReq < 8) {
+        alert( "Please keep the password between 8 and 128 characters");
+        checkLengthReq();
+    }
+
+    passwordArray.length = lengthReq;
 }
 
 //this function will create a password with random characters from the allChar array regardless of the requirements
@@ -118,11 +138,98 @@ function initialPassword() {
             
          var char = allChar[index];
             
-         password[i] = char;
+         passwordArray[i] = char;
+    }
+}
 
+function lowerCharConfirm() {
+    if (lowerCharReq === "y") {
+
+        var index = Math.floor(Math.random() * lowerChar.length);
+
+        var char = lowerChar[index];
+
+        lowerCharSpot = Math.floor(Math.random() * passwordArray.length);
+
+        passwordArray[lowerCharSpot] = char;
     }
 
 }
+
+function upperCharConfirm() {
+    if (upperCharReq === "y") {
+
+        var index = Math.floor(Math.random() * upperChar.length);
+
+        var char = upperChar[index];
+
+        upperCharSpot = Math.floor(Math.random() * passwordArray.length);
+//this block makes sure that a required uppercase cannot overwrite the required lowercase to guarantee that both make it to the final password
+        if (upperCharSpot === lowerCharSpot) {
+            upperCharConfirm();
+        }
+
+        else {
+        passwordArray[upperCharSpot] = char;
+        }
+    }
+
+}
+
+function numCharConfirm() {
+    if (numCharReq === "y") {
+
+        var index = Math.floor(Math.random() * numChar.length);
+
+        var char = numChar[index];
+
+        numCharSpot = Math.floor(Math.random() * passwordArray.length);
+
+        if (numCharSpot === lowerCharSpot) {
+            numCharConfirm();
+        }
+
+        else if (numCharSpot === upperCharSpot) {
+            numCharConfirm();
+        }
+
+        else {
+        passwordArray[numCharSpot] = char;
+        }
+    }
+
+}
+
+function specialCharConfirm() {
+    if (specialCharReq === "y") {
+
+        var index = Math.floor(Math.random() * specialChar.length);
+
+        var char = specialChar[index];
+
+        specialCharSpot = Math.floor(Math.random() * passwordArray.length);
+
+        if (specialCharSpot === lowerCharSpot) {
+            specialCharConfirm();
+        }
+
+        else if (specialCharSpot === upperCharSpot) {
+            specialCharConfirm();
+        }
+
+        else if (specialCharSpot === numCharSpot) {
+            specialCharConfirm();
+        }
+
+        else {
+        passwordArray[specialCharSpot] = char;
+        }
+    }
+
+}
+
+
+
 
  function generate() {
     checkLowerCharReq();
@@ -131,6 +238,16 @@ function initialPassword() {
     checkSpecialCharReq();
     checkLengthReq();
     initialPassword();
-    console.log(password);
+    lowerCharConfirm();
+    upperCharConfirm();
+    numCharConfirm();
+    specialCharConfirm();
+    var passW = document.getElementById("pass")
+    var finalPassword = passwordArray.join(",")
+    var finalPasswordString = document.createTextNode(finalPassword)
+    passW.appendChild(finalPasswordString);
  }
 
+ //var passW = document.getElementById("pass")
+   // var code = document.createTextNode("sample text")
+    //passW.appendChild(code);
